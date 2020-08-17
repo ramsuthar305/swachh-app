@@ -10,6 +10,7 @@ import styles from '../constants/styles';
 import * as Location from 'expo-location';
 import axios from "axios";
 import Constants from '../constants/text';
+import AsyncStorage from "@react-native-community/async-storage";
 export default function Toolbar({ cameraRef, navigation }) {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
@@ -48,18 +49,19 @@ export default function Toolbar({ cameraRef, navigation }) {
 
     async function uploadData() {
         setIsImage(false)
+        const userData = await AsyncStorage.getItem("userData")
         let location = await Location.getCurrentPositionAsync({});
-        console.log('this is locations:' + JSON.stringify(location))
+        console.log('this is locations:' + userData.user_email)
         const data = {
             "file": image,
-            "grievance_id": 'fdskfjlfjslfjrr8',
-            "user_id": "user_id",
+            "grievance_id": Math.random().toString(36).substring(7),
+            "user_id": userData.user_email,
             "grievance_type": "unpredicted",
             "latitude": location.coords.latitude,
             "longitude": location.coords.longitude,
         }
 
-        console.log('this is your data: ' + JSON.stringify(data))
+        // console.log('this is your data: ' + JSON.stringify(data))
         axios
             .post(`${Constants.ApiLink}/uploader`, data)
             .then(async function (response) {
