@@ -23,7 +23,7 @@ import {
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import AsyncStorage from "@react-native-community/async-storage";
-
+import Constants from '../constants/text'
 import * as Animatable from "react-native-animatable";
 import Texts from "../constants/text";
 import axios from "axios";
@@ -37,7 +37,7 @@ export default function Profile({ navigation }) {
             // Keep on showing the SlashScreen
 
             axios
-                .get("`${Constants.ApiLink}`/api/logout")
+                .get(`${Constants.ApiLink}/api/logout`)
                 .then(async function (response) {
                     // handle success
 

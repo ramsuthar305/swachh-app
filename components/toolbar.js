@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 export default function Toolbar({ cameraRef, navigation }) {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
+    const [userData, setuserData] = useState({});
 
     useEffect(() => {
         (async () => {
@@ -49,19 +50,22 @@ export default function Toolbar({ cameraRef, navigation }) {
 
     async function uploadData() {
         setIsImage(false)
-        const userData = await AsyncStorage.getItem("userData")
+        let response=await AsyncStorage.getItem("userData")
+        
+        response = JSON.parse(response);
+        console.log('\n\n\n\noriginal data:'+JSON.stringify(response.data.user_email))
         let location = await Location.getCurrentPositionAsync({});
-        console.log('this is locations:' + userData.user_email)
+        // console.log('\n\nthis is locations:' + JSON.parse(userData.email))
         const data = {
             "file": image,
             "grievance_id": Math.random().toString(36).substring(7),
-            "user_id": userData.user_email,
+            "user_id": response.data.user_email,
             "grievance_type": "unpredicted",
             "latitude": location.coords.latitude,
             "longitude": location.coords.longitude,
         }
 
-        // console.log('this is your data: ' + JSON.stringify(data))
+        console.log('this is your data: ' + JSON.stringify(data))
         axios
             .post(`${Constants.ApiLink}/uploader`, data)
             .then(async function (response) {
@@ -83,7 +87,7 @@ export default function Toolbar({ cameraRef, navigation }) {
             .finally(function () {
                 // always executed
             });
-        console.log('This is my base 64 image', image)
+        // console.log('This is my base 64 image', image)
         await cameraRef.resumePreview()
     }
 
