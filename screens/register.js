@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Image, TextInput, CheckBox, TouchableOpacity, S
 import { Dimensions } from 'react-native'
 import { FontAwesome5 } from '@expo/vector-icons';
 import axios from "axios";
-
+import Constants from '../constants/text';
 export default function Register({ navigation }) {
     const [dataLoaded, setDataLoaded] = useState(false);
     const [phone, onChangephone] = useState('');
@@ -25,7 +25,7 @@ export default function Register({ navigation }) {
                 "user_type": "general"
             }
             axios
-                .post("http://192.168.43.19:5000/api/register", data)
+                .post(`${Constants.ApiLink}/api/register`, data)
                 .then(async function (response) {
                     // handle success
 

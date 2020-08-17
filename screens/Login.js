@@ -5,6 +5,7 @@ import { Dimensions } from 'react-native'
 import { FontAwesome5 } from '@expo/vector-icons';
 import axios from "axios";
 import AsyncStorage from "@react-native-community/async-storage";
+import Constants from '../constants/text';
 export default function Login({ navigation }) {
     const [dataLoaded, setDataLoaded] = useState(false);
     const [email, onChangeemail] = useState('');
@@ -22,7 +23,7 @@ export default function Login({ navigation }) {
                 "user_password": "12345"
             }
             axios
-                .post("http://192.168.43.19:5000/api/login", data)
+                .post(`${Constants.ApiLink}/api/login`, data)
                 .then(async function (response) {
                     // handle success
 

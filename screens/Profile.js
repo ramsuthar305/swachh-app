@@ -37,7 +37,7 @@ export default function Profile({ navigation }) {
             // Keep on showing the SlashScreen
 
             axios
-                .get("http://192.168.43.19:5000/api/logout")
+                .get("`${Constants.ApiLink}`/api/logout")
                 .then(async function (response) {
                     // handle success
 

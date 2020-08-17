@@ -9,7 +9,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import styles from '../constants/styles';
 import * as Location from 'expo-location';
 import axios from "axios";
-
+import Constants from '../constants/text';
 export default function Toolbar({ cameraRef, navigation }) {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
@@ -61,7 +61,7 @@ export default function Toolbar({ cameraRef, navigation }) {
 
         console.log('this is your data: ' + JSON.stringify(data))
         axios
-            .post("http://192.168.43.19:5000/uploader", data)
+            .post(`${Constants.ApiLink}/uploader`, data)
             .then(async function (response) {
                 // handle success
 
