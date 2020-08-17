@@ -4,41 +4,44 @@ import { StyleSheet, Text, View, Image, TextInput, CheckBox, TouchableOpacity, S
 import { Dimensions } from 'react-native'
 import { FontAwesome5 } from '@expo/vector-icons';
 import axios from "axios";
-
+import AsyncStorage from "@react-native-community/async-storage";
 export default function Login({ navigation }) {
     const [dataLoaded, setDataLoaded] = useState(false);
-    const [phone, onChangephone] = useState('');
+    const [email, onChangeemail] = useState('');
     const [password, onChangePassword] = useState('');
     const [rememberMe, setrememberMe] = useState(false);
     const handleClick = () => setrememberMe(!rememberMe)
 
-    // axios
-    //     .post("https://us-central1-sahayak-a912a.cloudfunctions.net/app/get_society_detail", data)
-    //     .then(async function (response) {
-    //         // handle success
 
-    //         try {
-    //             const jsonValue = JSON.stringify(response.data);
-    //             await AsyncStorage.setItem("value", jsonValue);
-    //             console.log("data: " + jsonValue);
-    //         } catch (e) {
-    //             // saving error
-    //             console.log("Got error while storing data to async" + e);
-    //         }
-    //     })
-    //     .catch(function (error) {
-    //         // handle error
-    //         console.log("ERROR ON HOME", error);
-    //     })
-    //     .finally(function () {
-    //         // always executed
-    //     });
 
 
     const login = async () => {
         try {
-            // Keep on showing the SlashScreen
-            console.log(phone, password);
+            const data={
+                "user_email": email,
+                "user_password": "12345"
+            }
+            axios
+                .post("http://192.168.43.19:5000/api/login", data)
+                .then(async function (response) {
+                    // handle success
+
+                    try {
+                        const jsonValue = JSON.stringify(response.data.data);
+                        await AsyncStorage.setItem("userData", jsonValue);
+                        console.log("data: " + jsonValue);
+                    } catch (e) {
+                        // saving error
+                        console.log("Got error while storing data to async" + e);
+                    }
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log("ERROR ON HOME", error);
+                })
+                .finally(function () {
+                    // always executed
+                });
             navigation.navigate('Home')
             // await fetchFonts();
         } catch (e) {
@@ -51,7 +54,7 @@ export default function Login({ navigation }) {
     }
 
     const [Splash, setSplash] = useState(true)
-    
+
     return (
         <View style={styles.container}>
             <View style={{ flexDirection: "row" }}>
@@ -61,10 +64,10 @@ export default function Login({ navigation }) {
             <View style={styles.form}>
                 <TextInput
                     style={styles.formInputs}
-                    placeholder="Your phone"
+                    placeholder="Your email"
                     placeholderTextColor="#95a5a6"
-                    onChangeText={text => onChangephone(text)}
-                    value={phone}
+                    onChangeText={text => onChangeemail(text)}
+                    value={email}
                 />
                 <TextInput
                     style={styles.formInputs}

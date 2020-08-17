@@ -8,6 +8,7 @@ import axios from "axios";
 export default function Register({ navigation }) {
     const [dataLoaded, setDataLoaded] = useState(false);
     const [phone, onChangephone] = useState('');
+    const [email, onChangeemail] = useState('');
     const [name, onChangeName] = useState('');
     const [password, onChangePassword] = useState('');
     const [rememberMe, setrememberMe] = useState(false);
@@ -16,6 +17,29 @@ export default function Register({ navigation }) {
     const register = async () => {
         try {
             // Keep on showing the SlashScreen
+            const data = {
+                "user_email": email,
+                "user_name": name,
+                "user_phone": phone,
+                "user_password": password,
+                "user_type": "general"
+            }
+            axios
+                .post("http://192.168.43.19:5000/api/register", data)
+                .then(async function (response) {
+                    // handle success
+
+                    try {
+                        const jsonValue = JSON.stringify(response.data);
+                        // await AsyncStorage.setItem("userData", jsonValue);
+                        console.log("data: " + jsonValue);
+                    } catch (e) {
+                        // saving error
+                        console.log("Got error while storing data to async" + e);
+                    }
+                })
+
+
             console.log(name, phone, password);
             navigation.navigate('Home')
         } catch (e) {
@@ -27,27 +51,7 @@ export default function Register({ navigation }) {
         }
     }
 
-    // axios
-    //     .post("https://us-central1-sahayak-a912a.cloudfunctions.net/app/get_society_detail", data)
-    //     .then(async function (response) {
-    //         // handle success
 
-    //         try {
-    //             const jsonValue = JSON.stringify(response.data);
-    //             await AsyncStorage.setItem("value", jsonValue);
-    //             console.log("data: " + jsonValue);
-    //         } catch (e) {
-    //             // saving error
-    //             console.log("Got error while storing data to async" + e);
-    //         }
-    //     })
-    //     .catch(function (error) {
-    //         // handle error
-    //         console.log("ERROR ON HOME", error);
-    //     })
-    //     .finally(function () {
-    //         // always executed
-    //     });
 
     return (
         <View style={styles.container}>
@@ -68,6 +72,13 @@ export default function Register({ navigation }) {
                     placeholderTextColor="#95a5a6"
                     onChangeText={text => onChangephone(text)}
                     value={phone}
+                />
+                <TextInput
+                    style={styles.formInputs}
+                    placeholder="Your email"
+                    placeholderTextColor="#95a5a6"
+                    onChangeText={text => onChangeemail(text)}
+                    value={email}
                 />
                 <TextInput
                     style={styles.formInputs}

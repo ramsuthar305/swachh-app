@@ -59,6 +59,7 @@ const AppNavigator = createStackNavigator({
 const AppContainer = createAppContainer(AppNavigator);
 
 export default function App() {
+  
   Font.loadAsync({
     "Quicksand-regular": require("./assets/fonts/Quicksand-Regular.ttf"),
     "Quicksand-medium": require("./assets/fonts/Quicksand-Medium.ttf"),

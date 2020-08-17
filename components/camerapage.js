@@ -34,7 +34,7 @@ export default function CameraPage({navigation}) {
                         backgroundColor: 'transparent',
                         flexDirection: 'row',
                     }}>
-                    <Toolbar cameraRef={cameraRef} setImage={setImage} navigation={navigation}/>
+                    <Toolbar cameraRef={cameraRef} navigation={navigation}/>
                 </View>
             </Camera>
         </View>
