@@ -55,11 +55,11 @@ export default function Toolbar({ cameraRef, navigation }) {
         response = JSON.parse(response);
         console.log('\n\n\n\noriginal data:'+JSON.stringify(response.data.user_email))
         let location = await Location.getCurrentPositionAsync({});
-        // console.log('\n\nthis is locations:' + JSON.parse(userData.email))
+       
         const data = {
             "file": image,
             "grievance_id": Math.random().toString(36).substring(7),
-            "user_id": response.data.user_email,
+            "user_id": JSON.stringify(response.data.user_email),
             "grievance_type": "unpredicted",
             "latitude": location.coords.latitude,
             "longitude": location.coords.longitude,
