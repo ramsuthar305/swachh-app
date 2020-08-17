@@ -57,7 +57,7 @@ export default function Toolbar({ cameraRef, navigation }) {
         let location = await Location.getCurrentPositionAsync({});
        
         const data = {
-            "file": image,
+            "image_link": image,
             "grievance_id": Math.random().toString(36).substring(7),
             "user_id": JSON.stringify(response.data.user_email),
             "grievance_type": "unpredicted",
