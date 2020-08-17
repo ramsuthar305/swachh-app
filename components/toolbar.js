@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Camera } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
 import { Col, Row, Grid } from "react-native-easy-grid";
@@ -7,31 +7,26 @@ import { Feather } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import styles from '../constants/styles';
+import * as Location from 'expo-location';
+import axios from "axios";
 
-export default function Toolbar({ cameraRef,  navigation }) {
+export default function Toolbar({ cameraRef, navigation }) {
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+
+    useEffect(() => {
+        (async () => {
+            let { status } = await Location.requestPermissionsAsync();
+            if (status !== 'granted') {
+                setErrorMsg('Permission to access location was denied');
+            }
+
+            let location = await Location.getCurrentPositionAsync({});
+            setLocation(location);
+        })();
+    });
 
 
-    // axios
-    //     .post("https://us-central1-sahayak-a912a.cloudfunctions.net/app/get_society_detail", data)
-    //     .then(async function (response) {
-    //         // handle success
-
-    //         try {
-    //             const jsonValue = JSON.stringify(response.data);
-    //             await AsyncStorage.setItem("value", jsonValue);
-    //             console.log("data: " + jsonValue);
-    //         } catch (e) {
-    //             // saving error
-    //             console.log("Got error while storing data to async" + e);
-    //         }
-    //     })
-    //     .catch(function (error) {
-    //         // handle error
-    //         console.log("ERROR ON HOME", error);
-    //     })
-    //     .finally(function () {
-    //         // always executed
-    //     });
 
     const [capturing, setCapturing] = useState(false)
     const [image, setImage] = useState(null)
@@ -50,10 +45,43 @@ export default function Toolbar({ cameraRef,  navigation }) {
         }
 
     }
-    
+
     async function uploadData() {
         setIsImage(false)
-        console.log('This is my base 64 image',image)
+        let location = await Location.getCurrentPositionAsync({});
+        console.log('this is locations:' + JSON.stringify(location))
+        const data = {
+            "file": image,
+            "grievance_id": 'fdskfjlfjslfjrr8',
+            "user_id": "user_id",
+            "grievance_type": "unpredicted",
+            "latitude": location.coords.latitude,
+            "longitude": location.coords.longitude,
+        }
+
+        console.log('this is your data: ' + JSON.stringify(data))
+        axios
+            .post("http://192.168.43.19:5000/uploader", data)
+            .then(async function (response) {
+                // handle success
+
+                try {
+                    const jsonValue = JSON.stringify(response.data);
+                    await AsyncStorage.setItem("value", jsonValue);
+                    console.log("data: " + jsonValue);
+                } catch (e) {
+                    // saving error
+                    console.log("Got error while storing data to async" + e);
+                }
+            })
+            .catch(function (error) {
+                // handle error
+                console.log("ERROR ON HOME", error);
+            })
+            .finally(function () {
+                // always executed
+            });
+        console.log('This is my base 64 image', image)
         await cameraRef.resumePreview()
     }
 
@@ -66,7 +94,7 @@ export default function Toolbar({ cameraRef,  navigation }) {
             <Row>
                 <Col style={styles.alignCenter}>
                     <TouchableOpacity onPress={() => navigation.navigate('EntryRecords')}>
-                    <MaterialIcons name="history" size={30} color="white" />
+                        <MaterialIcons name="history" size={30} color="white" />
                     </TouchableOpacity>
                 </Col>
 
@@ -88,7 +116,7 @@ export default function Toolbar({ cameraRef,  navigation }) {
                             </TouchableOpacity>
                         </Col> : <Col style={styles.alignCenter}>
                             <TouchableOpacity onPress={account}>
-                            <MaterialCommunityIcons name="account" size={30} color="white" />
+                                <MaterialCommunityIcons name="account" size={30} color="white" />
                             </TouchableOpacity>
                         </Col>
                 }

@@ -87,11 +87,12 @@ export default function Profile({ navigation }) {
         try {
             await AsyncStorage.getItem("userData").then((response) => {
                 response = JSON.parse(response);
-                console.log('Data: ',response);
+                console.log('Data: ',response.data);
                 setUserData({
-                    name: response.user_name,
-                    phone: response.user_phone,
-                    userType: response.user_type,
+                    name: response.data.user_name,
+                    phone: response.data.user_phone,
+                    email: response.data.user_email,
+                    userType: response.data.user_type,
                 });
             });
         } catch (e) {

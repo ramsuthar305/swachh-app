@@ -27,7 +27,7 @@ export default function Login({ navigation }) {
                     // handle success
 
                     try {
-                        const jsonValue = JSON.stringify(response.data.data);
+                        const jsonValue = JSON.stringify(response.data);
                         await AsyncStorage.setItem("userData", jsonValue);
                         console.log("data: " + jsonValue);
                     } catch (e) {
