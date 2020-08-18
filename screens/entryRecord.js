@@ -6,7 +6,10 @@ import { Entypo, MaterialIcons } from '@expo/vector-icons';
 import * as Localization from 'expo-localization';
 import i18n from 'i18n-js';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import EntryCard from '../components/entryRecordCard' 
+import EntryCard from '../components/entryRecordCard';
+import axios from "axios";
+import AsyncStorage from "@react-native-community/async-storage";
+import Constants from '../constants/text'
 
 const fetchFonts = () => {
     console.log("loading font");
@@ -20,27 +23,64 @@ const fetchFonts = () => {
 
 export default function EntryRecords({ navigation }) {
 
-    // axios
-    //     .post("https://us-central1-sahayak-a912a.cloudfunctions.net/app/get_society_detail", data)
-    //     .then(async function (response) {
-    //         // handle success
+    const [userData, setUserData] = useState({});
+    const [historyData, setHistoryData] = useState({});
 
-    //         try {
-    //             const jsonValue = JSON.stringify(response.data);
-    //             await AsyncStorage.setItem("value", jsonValue);
-    //             console.log("data: " + jsonValue);
-    //         } catch (e) {
-    //             // saving error
-    //             console.log("Got error while storing data to async" + e);
-    //         }
-    //     })
-    //     .catch(function (error) {
-    //         // handle error
-    //         console.log("ERROR ON HOME", error);
-    //     })
-    //     .finally(function () {
-    //         // always executed
-    //     });
+    const request_history = async () => {
+        try {
+            const fetch_email = async () => {
+                try {
+                    await AsyncStorage.getItem("userData").then((response) => {
+                        response = JSON.parse(response);
+                        console.log('Data: ',response.data);
+                        setUserData({
+                            email: response.data.user_email,
+                        });
+                    });
+                } catch (e) {
+                    console.warn(e);
+                } finally {
+                    setDataLoaded(true);
+                    // Hiding the SplashScreen
+                }
+            };
+            
+            fetch_email();
+
+            console.log(userData)
+
+            axios
+                .post(`${Constants.ApiLink}/api/history/${userData.email}`)
+                .then(async function (response) {
+                    // handle success
+
+                    try {
+                        const jsonValue = JSON.stringify(response.data);
+                        setHistoryData(response.data)
+                        await AsyncStorage.setItem("userData", jsonValue);
+                        console.log("data: " + jsonValue);
+                    } catch (e) {
+                        // saving error
+                        console.log("Got error while storing data to async" + e);
+                    }
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log("ERROR ON HOME", error);
+                })
+                .finally(function () {
+                    // always executed
+                });
+            navigation.navigate('Home')
+            // await fetchFonts();
+        } catch (e) {
+            console.warn(e);
+        } finally {
+            setDataLoaded(true);
+            // Hiding the SplashScreen
+
+        }
+    }
 
     var radio_props = [
         { label: 'High ', value: 0 },
@@ -68,46 +108,9 @@ export default function EntryRecords({ navigation }) {
 
     useEffect(() => {
         init();
+        request_history();
     }, []);
 
-    const DATA = [
-        {
-            id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-            title: 'First Item',
-        },
-        {
-            id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-            title: 'Second Item',
-        },
-        {
-            id: '58694a0f-3da1-471f-bd96-145571e29d72',
-            title: 'Third Item',
-        },
-        {
-            id: 'bd7acbea-c1b1-46c2dsffds-aed5-3ad53abb28ba',
-            title: 'First Item',
-        },
-        {
-            id: '3ac68afc-c605-48ddsf3-a4f8-fbd91aa97f63',
-            title: 'Second Item',
-        },
-        {
-            id: '58694a0f-3da1-47fsdf1f-bd96-145571e29d72',
-            title: 'Third Item',
-        },
-        {
-            id: 'bd7acbea-c1b1-46sfc2-aed5-3ad53abb28ba',
-            title: 'First Item',
-        },
-        {
-            id: '3ac68afc-c605-48d3dsf-a4f8-fbd91aa97f63',
-            title: 'Second Item',
-        },
-        {
-            id: '58694a0f-3da1-47dsf1f-bd96-145571e29d72',
-            title: 'Third Item',
-        },
-    ];
 
     if (!dataLoaded) {
         return (
@@ -130,8 +133,8 @@ export default function EntryRecords({ navigation }) {
                     style={{ marginBottom: hp("10%") }}
                     numColumns={1}                  // set number of columns 
                     
-                    data={DATA}
-                    renderItem={({ item }) => <EntryCard />}
+                    data={historyData}
+                    renderItem={({ item }) => <EntryCard props={item} />}
                     keyExtractor={item => item.id}
                 />
             </View>

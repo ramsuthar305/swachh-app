@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-const EntryCard = ({ handlePress, title }) => {
+const EntryCard = ({ props }) => {
     const [dataLoaded, setDataLoaded] = useState(false);
     const init = async () => {
         try {
@@ -49,13 +49,13 @@ const EntryCard = ({ handlePress, title }) => {
                         </View>
                         <View style={styles.row}>
                         <Ionicons name="md-list-box" size={12} color="black" />
-                            <Text style={styles.flatNo}>  Garbage  </Text>
+                            <Text style={styles.flatNo}>  {props.grievance_type}  </Text>
                             <Entypo name="location" size={12} color="black" />
-                            <Text style={styles.flatNo}> Wadgaon Sheri  </Text>
+                            <Text style={styles.flatNo}> {props.area}  </Text>
                         </View>
                         <View style={styles.row}>
                             <SimpleLineIcons name="clock" size={11} color="black" />
-                            <Text style={styles.flatNo}> Tuesday, 12 January 2020 12:45 </Text>
+                            <Text style={styles.flatNo}> {props.assigned_date} </Text>
                         </View>
 
                     </View>
