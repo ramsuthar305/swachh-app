@@ -24,40 +24,25 @@ const fetchFonts = () => {
 export default function EntryRecords({ navigation }) {
 
     const [userData, setUserData] = useState({});
+    const [dataLoaded, setDataLoaded] = useState(false);
     const [historyData, setHistoryData] = useState({});
 
     const request_history = async () => {
         try {
-            const fetch_email = async () => {
-                try {
-                    await AsyncStorage.getItem("userData").then((response) => {
-                        response = JSON.parse(response);
-                        console.log('Data: ',response.data);
-                        setUserData({
-                            email: response.data.user_email,
-                        });
-                    });
-                } catch (e) {
-                    console.warn(e);
-                } finally {
-                    setDataLoaded(true);
-                    // Hiding the SplashScreen
-                }
-            };
-            
-            fetch_email();
 
-            console.log(userData)
+            let response = await AsyncStorage.getItem("userData")
+            response = JSON.parse(response);
 
             axios
-                .post(`${Constants.ApiLink}/api/history/${userData.email}`)
+                .get(`${Constants.ApiLink}/api/history/${response.data.user_email}`)
                 .then(async function (response) {
                     // handle success
 
                     try {
-                        const jsonValue = JSON.stringify(response.data);
-                        setHistoryData(response.data)
-                        await AsyncStorage.setItem("userData", jsonValue);
+                        const jsonValue = response.data.data
+                        console.log(jsonValue)
+                        setHistoryData(jsonValue)
+                        setDataLoaded(true);
                         console.log("data: " + jsonValue);
                     } catch (e) {
                         // saving error
@@ -71,7 +56,6 @@ export default function EntryRecords({ navigation }) {
                 .finally(function () {
                     // always executed
                 });
-            navigation.navigate('Home')
             // await fetchFonts();
         } catch (e) {
             console.warn(e);
@@ -88,14 +72,13 @@ export default function EntryRecords({ navigation }) {
         { label: 'Low ', value: 2 }
     ];
 
-    const [dataLoaded, setDataLoaded] = useState(false);
 
 
     const init = async () => {
         try {
             // Keep on showing the SlashScreen
 
-            
+
             await fetchFonts();
         } catch (e) {
             console.warn(e);
@@ -120,7 +103,7 @@ export default function EntryRecords({ navigation }) {
         );
     } else {
         return (
-            <View style={{ paddingHorizontal: wp("4%"),backgroundColor:"white" }}>
+            <View style={{ paddingHorizontal: wp("4%"), backgroundColor: "white" }}>
                 <View style={{ paddingBottom: "7%", paddingTop: "4%" }}>
                     <TouchableOpacity style={{ position: "absolute", top: hp("2%") }}>
                         <MaterialIcons name="keyboard-backspace" size={24} color="black" />
@@ -128,11 +111,12 @@ export default function EntryRecords({ navigation }) {
                     <View style={{ alignItems: "center", flexGrow: 1 }}>
                         <Text style={{ fontFamily: "Quicksand-Bold", fontSize: 20, color: "black", textAlign: "center" }} >Your reports</Text>
                     </View>
+                    
                 </View>
                 <FlatList
                     style={{ marginBottom: hp("10%") }}
                     numColumns={1}                  // set number of columns 
-                    
+
                     data={historyData}
                     renderItem={({ item }) => <EntryCard props={item} />}
                     keyExtractor={item => item.id}

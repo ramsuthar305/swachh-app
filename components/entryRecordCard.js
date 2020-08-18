@@ -48,8 +48,11 @@ const EntryCard = ({ props }) => {
                             {/* <Text style={styles.userName}> Abdul Ansari</Text> */}
                         </View>
                         <View style={styles.row}>
-                        <Ionicons name="md-list-box" size={12} color="black" />
+                            <Ionicons name="md-list-box" size={12} color="black" />
                             <Text style={styles.flatNo}>  {props.grievance_type}  </Text>
+
+                        </View>
+                        <View style={styles.row}>
                             <Entypo name="location" size={12} color="black" />
                             <Text style={styles.flatNo}> {props.area}  </Text>
                         </View>
@@ -69,7 +72,7 @@ const EntryCard = ({ props }) => {
 
 export default EntryCard;
 const styles = StyleSheet.create({
-    cardContainer: { margin: wp("3%"), backgroundColor: "white", elevation: 5, padding: wp("4%"), borderRadius: wp("3%"), justifyContent: "space-between",borderLeftWidth:4,borderColor:Colors.primaryColor },
+    cardContainer: { margin: wp("3%"), backgroundColor: "white", elevation: 5, padding: wp("4%"), borderRadius: wp("3%"), justifyContent: "space-between", borderLeftWidth: 4, borderColor: Colors.primaryColor },
     textContainer: {},
     userName: { fontFamily: "Quicksand-Bold", fontSize: 20, paddingBottom: wp("0.8%") },
     flatNo: { fontFamily: "Quicksand-SemiBold" },
