@@ -59,7 +59,7 @@ export default function Toolbar({ cameraRef, navigation }) {
         const data = {
             "image_link": image,
             "grievance_id": Math.random().toString(36).substring(7),
-            "user_id": JSON.stringify(response.data.user_email),
+            "user_id": response.data.user_email,
             "grievance_type": "unpredicted",
             "latitude": location.coords.latitude,
             "longitude": location.coords.longitude,
