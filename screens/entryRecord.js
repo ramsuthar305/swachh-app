@@ -55,6 +55,7 @@ export default function EntryRecords({ navigation }) {
         try {
             // Keep on showing the SlashScreen
 
+            
             await fetchFonts();
         } catch (e) {
             console.warn(e);
